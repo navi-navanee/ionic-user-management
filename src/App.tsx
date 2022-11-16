@@ -1,4 +1,4 @@
-import { Route } from 'react-router-dom';
+import { NavLink, Redirect, Route } from 'react-router-dom';
 import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import Home from './pages/Home/Home';
@@ -24,15 +24,25 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
+import { useContext  } from 'react';
+import { AuthContext } from './context/AuthContext';
 
 setupIonicReact();
+const currentUser =false
+// const {currentUser} = useContext(AuthContext)
+
+const RequireAuth = ({children} :any) => {
+  return currentUser ? (children) : <Redirect to="/" />
+}
 
 const App: React.FC = () => (
   <IonApp>
     <IonReactRouter>
       <IonRouterOutlet>
-      <Route exact path="/" component={Home} />
-      <Route exact path="/login" component={Login} />
+      <Route exact path="/" component={Login} />
+      <RequireAuth>
+      <Route exact path="/home" component={Home} />
+      </RequireAuth>
       <Route exact path="/register" component={Register} />
       <Route exact path="/dashboard" component={Dashboard} />
       </IonRouterOutlet>
